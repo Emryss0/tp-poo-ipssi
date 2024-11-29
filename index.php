@@ -1,3 +1,4 @@
+
 <?php
 
 // PROJET FIL ROUGE : Blog - Thème voyage - Sous-catégories : Culinaire / Art / Actus Sportives + Possibilité de reviews - Si possible, devis voyage.
@@ -24,6 +25,7 @@ Autoloader::register();
 
 use Models\BDD;
 use Models\Router;
+use Controllers\SlotMachineController;
 use Models\Article;
 use Controllers\ErrorsController;
 use Controllers\ArticlesController;
@@ -73,6 +75,7 @@ switch (true) {
   case ($uri === "/"):
     $router->get("/", BlogController::index());
     break;
+  
   case (str_contains($uri, "/articles")):
     if ($idParam && !str_contains($uri, "/update")) {
       $router->get("/articles/$idParam", ArticlesController::getById($idParam));
@@ -90,8 +93,15 @@ switch (true) {
       $router->post("/articles/delete", ArticlesController::deleteArticle());
       exit;
     }
-
     $router->get("/articles", ArticlesController::getList());
+
+    case (str_contains($uri, "/slot-machine")): 
+      $router->get("/slot-machine", SlotMachineController::index());
+      exit;
+    case (str_contains($uri, "/play")): 
+      $router->get("/play", SlotMachineController::play());
+      exit;
+   
     break;
   default:
     ErrorsController::launchError(404);
